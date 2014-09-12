@@ -3,15 +3,32 @@ name=local-centos base
 baseurl=http://203.239.182.189:8888/repo/centos-base/
 enabled=1
 gpgcheck=0
+skip_if_unavailable=1
 
 [local-centos-update]
 name=local-centos update
 baseurl=http://203.239.182.189:8888/repo/centos-update/
 enabled=1
 gpgcheck=0
+skip_if_unavailable=1
 
 [local-centos-extra]
 name=local-centos extra
 baseurl=http://203.239.182.189:8888/repo/centos-extra/
 enabled=1
 gpgcheck=0
+skip_if_unavailable=1
+
+[local-centos-epel6]
+name=local-fedora epel6
+baseurl=http://203.239.182.189:8888/repo/epel6/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-rpmforge]
+name=local-rpmforge
+baseurl=http://203.239.182.189:8888/repo/rpmforge/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
