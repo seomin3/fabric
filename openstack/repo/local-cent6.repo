@@ -1,0 +1,17 @@
+[local-centos-base]
+name=local-centos base
+baseurl=http://203.239.182.189:8888/repo/centos-base/
+enabled=1
+gpgcheck=0
+
+[local-centos-update]
+name=local-centos update
+baseurl=http://203.239.182.189:8888/repo/centos-update/
+enabled=1
+gpgcheck=0
+
+[local-centos-extra]
+name=local-centos extra
+baseurl=http://203.239.182.189:8888/repo/centos-extra/
+enabled=1
+gpgcheck=0
