@@ -32,7 +32,7 @@ rsync -at --delete rsync://$EPEL6_URL $EPEL6_DIR > $EPEL6_DIR/rsync.log 2>&1
 # rpmforge
 rsync -at --delete rsync://$RPMFORGE_URL $RPMFORGE_DIR > $RPMFORGE_DIR/rsync.log 2>&1
 
-for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR
+for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR $RPMFORGE_DIR
 do
 	createrepo $i
 	#tar -cf - $i | xz -9 -c - > /tmp/repo-$i.tar.xz
