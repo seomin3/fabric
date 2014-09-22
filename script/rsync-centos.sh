@@ -15,8 +15,15 @@ EPEL6_URL="$REPO_URL/pub/Linux/Fedora/epel/6/x86_64/"
 REPO_URL='ftp.riken.jp'
 RPMFORGE_DIR='/repo/rpmforge'
 RPMFORGE_URL="$REPO_URL/repoforge/redhat/el6/en/x86_64/rpmforge/RPMS/"
+# foreman
+FOREMAN_DIR='/repo/foreman'
+FOREMAN_URL="yum.theforeman.org/yum/"
+# puppet
+PUPPET_DIR='/repo/puppet-products'
+PUPPET_URL="yum.puppetlabs.com/packages/yum/el/6.5/"
 
-for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR $RPMFORGE_DIR
+# create directory
+for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR $RPMFORGE_DIR $FOREMAN_DIR $PUPPET_DIR
 do
 	[ ! -d $i ] && mkdir -p $i
 done
@@ -32,6 +39,14 @@ rsync -at --delete rsync://$EPEL6_URL $EPEL6_DIR > $EPEL6_DIR/rsync.log 2>&1
 # rpmforge
 rsync -at --delete rsync://$RPMFORGE_URL $RPMFORGE_DIR > $RPMFORGE_DIR/rsync.log 2>&1
 
+# foreman
+rsync -at --delete rsync://$FOREMAN_URL $FOREMAN_DIR > $FOREMAN_DIR/rsync.log 2>&1
+
+# puppet
+rsync -at --delete rsync://$PUPPET_URL $PUPPET_DIR > $PUPPET_DIR/rsync.log 2>&1
+
+
+# create xml
 for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR $RPMFORGE_DIR
 do
 	createrepo $i
