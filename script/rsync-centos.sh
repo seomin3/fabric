@@ -1,5 +1,5 @@
 #!/bin/bash
-
+COMPRESS=0
 REPO_URL='ftp.jaist.ac.jp'
 # CentOS
 BASE_DIR='/repo/centos-base'
@@ -19,7 +19,7 @@ RPMFORGE_URL="$REPO_URL/repoforge/redhat/el6/en/x86_64/rpmforge/RPMS/"
 FOREMAN_DIR='/repo/foreman'
 FOREMAN_URL="yum.theforeman.org/yum/"
 # puppet
-PUPPET_DIR='/repo/puppet-products'
+PUPPET_DIR='/repo/puppet'
 PUPPET_URL="yum.puppetlabs.com/packages/yum/el/6.5/"
 
 # create directory
@@ -47,8 +47,13 @@ rsync -at --delete rsync://$PUPPET_URL $PUPPET_DIR > $PUPPET_DIR/rsync.log 2>&1
 
 
 # create xml
-for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR $RPMFORGE_DIR
-do
-	createrepo $i
-	#tar -cf - $i | xz -9 -c - > /tmp/repo-$i.tar.xz
-done
+# compress
+if [ ! $COMPRESS -eq 0 ]
+then
+	for i in puppet foreman rpmforge epel6 centos-extra centos-update centos-base
+	do
+		#createrepo $i
+		cd /repo
+		tar -cf - $i | xz -9 -c - > /newdrive/archive/$i.tar.xz
+	done
+fi
