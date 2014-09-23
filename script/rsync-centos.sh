@@ -45,6 +45,9 @@ rsync -at --delete rsync://$FOREMAN_URL $FOREMAN_DIR > $FOREMAN_DIR/rsync.log 2>
 # puppet
 rsync -at --delete rsync://$PUPPET_URL $PUPPET_DIR > $PUPPET_DIR/rsync.log 2>&1
 
+# openstack-icehouse
+reposync -r openstack-icehouse -p /repo
+
 
 # create xml
 # compress
