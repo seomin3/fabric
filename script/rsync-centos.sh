@@ -29,21 +29,21 @@ do
 done
 
 # CentOS
-rsync -at --delete rsync://$BASE_URL $BASE_DIR --log-file=$BASE_DIR/rsync.log
-rsync -at --delete rsync://$UPDATE_URL $UPDATE_DIR --log-file=$UPDATE_DIR/rsync.log
-rsync -at --delete rsync://$EXTRA_URL $EXTRA_DIR --log-file=$EXTRA_DIR/rsync.log
+rsync -at --delete --log-file=$BASE_DIR/rsync.log rsync://$BASE_URL $BASE_DIR
+rsync -at --delete --log-file=$UPDATE_DIR/rsync.log rsync://$UPDATE_URL $UPDATE_DIR
+rsync -at --delete --log-file=$EXTRA_DIR/rsync.log rsync://$EXTRA_URL $EXTRA_DIR
 
 # Fedora EPEL6
-rsync -at --delete rsync://$EPEL6_URL $EPEL6_DIR --log-file=$EPEL6_DIR/rsync.log
+rsync -at --delete --log-file=$EPEL6_DIR/rsync.log rsync://$EPEL6_URL $EPEL6_DIR 
 
 # rpmforge
-rsync -at --delete rsync://$RPMFORGE_URL $RPMFORGE_DIR --log-file=$RPMFORGE_DIR/rsync.log
+rsync -at --delete --log-file=$RPMFORGE_DIR/rsync.log rsync://$RPMFORGE_URL $RPMFORGE_DIR
 
 # foreman
-rsync -at --delete rsync://$FOREMAN_URL $FOREMAN_DIR --log-file=$FOREMAN_DIR/rsync.log
+rsync -at --delete --log-file=$FOREMAN_DIR/rsync.log rsync://$FOREMAN_URL $FOREMAN_DIR
 
 # puppet
-rsync -at --delete rsync://$PUPPET_URL $PUPPET_DIR --log-file=$PUPPET_DIR/rsync.log
+rsync -at --delete --log-file=$PUPPET_DIR/rsync.log rsync://$PUPPET_URL $PUPPET_DIR
 
 # openstack-icehouse
 
