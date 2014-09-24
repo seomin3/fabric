@@ -54,9 +54,5 @@ def prep_cent6():
 		set_service(i, 'stop')
 	run('perl -pi -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config')
 
-def test():
-	put('../repo/local-cent6.repo', '/etc/yum.repos.d/')
-
-
 def reboot():
 	run('init 6')
