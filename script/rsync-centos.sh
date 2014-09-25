@@ -53,7 +53,7 @@ reposync -r openstack-icehouse -p /repo > /repo/openstack-icehouse/reposync.log 
 if [ $COMPRESS -eq 1 ]
 then
 	BACKUP_DIR='/newdrive/archive/'	
-	for i in puppet foreman rpmforge epel6 centos-extra centos-update centos-base
+	for i in puppet foreman rpmforge epel6 centos-extra centos-update centos-base openstack-icehouse
 	do
 		BACKUP_FILE="$BACKUPDIR/$i.tar.xz"
 		[ -f "$BACKUP_FILE" ] && rm -f $BACKUP_FILE
