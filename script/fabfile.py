@@ -1,6 +1,27 @@
-from fabric.api import put, run
+from fabric.api import *
 from fabric.contrib.files import exists
 execfile('./fabenv.py')
+
+def keystone():
+	put('/opt/git/openstack/install/*', '/opt/')
+	with cd('/opt'):
+		run('pwd')
+		run('chmod 744 *sh')
+		run('./install_keystone.sh')
+
+def glance():
+	put('/opt/git/openstack/install/*', '/opt/')
+	with cd('/opt'):
+		run('pwd')
+		run('chmod 744 *sh')
+		run('./install_glance.sh')
+
+def horizon():
+	put('/opt/git/openstack/install/*', '/opt/')
+	with cd('/opt'):
+		run('pwd')
+		run('chmod 744 *sh')
+		run('./install_horizon.sh')
 
 def set_service(name, op):
 	if exists('/etc/init.d/' + name):
