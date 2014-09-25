@@ -1,62 +1,69 @@
 [local-centos-base]
-name=local-centos base
+name=CentOS 6.5 Base
 baseurl=http://203.239.182.189:8888/repo/centos-base/
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-centos-update]
-name=local-centos update
+name=CentOS Update
 baseurl=http://203.239.182.189:8888/repo/centos-update/
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-centos-extra]
-name=local-centos extra
+name=CentOS 6.5 Extra
 baseurl=http://203.239.182.189:8888/repo/centos-extra/
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-centos-epel6]
-name=local-fedora epel6
+name=Fedora epel6
 baseurl=http://203.239.182.189:8888/repo/epel6/
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-rpmforge]
-name=local-rpmforge
+name=rpmforge
 baseurl=http://203.239.182.189:8888/repo/rpmforge/
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-puppet-products]
-name=local-puppet products
+name=Puppet Products
 baseurl=http://203.239.182.189:8888/repo/puppet/products/x86_64/
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-puppet-dependencies]
-name=local-puppet products
+name=Puppet Dependencies
 baseurl=http://203.239.182.189:8888/repo/puppet/dependencies/x86_64/
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-foreman-releases]
-name=local-foreman releases
+name=Foreman Releases
 baseurl=http://203.239.182.189:8888/repo/foreman/releases/1.5/el6/x86_64
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1
 
 [local-foreman-plugins]
-name=local-foreman plugins
+name=Foreman Plugins
 baseurl=http://203.239.182.189:8888/repo/foreman/plugins/1.5/el6/x86_64
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-openstack-icehouse]
+name=RDO Icehouse
+baseurl=http://203.239.182.189:8888/repo/openstack-icehouse
 enabled=1
 gpgcheck=0
 skip_if_unavailable=1

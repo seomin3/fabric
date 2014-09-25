@@ -1,6 +1,6 @@
 from fabric.api import put, run
 from fabric.contrib.files import exists
-execfile('/opt/sandbox/script/fabfile_host.py')
+execfile('./fabenv.py')
 
 def set_service(name, op):
 	if exists('/etc/init.d/' + name):
@@ -17,22 +17,18 @@ def set_ntp():
 	set_service('ntpd', 'start')
 
 def set_yum(arch):
-	run("echo 'nameserver 8.8.8.8' > /etc/resolv.conf")
 	if arch == 'rhel':
 		put('../repo/local-rhel6.repo', '/etc/yum.repos.d/')
 	if arch == 'cent':
 		put('../repo/local-cent6.repo', '/etc/yum.repos.d/')
+	if exists('/etc/yum.repos.d/CentOS-Base.repo'):
 		run('mkdir -p /etc/yum.repos.d/old')
-		if exists('/etc/yum.repos.d/CentOS-*'):
-			run('mv -f /etc/yum.repos.d/CentOS-* /etc/yum.repos.d/old/')
-	# rpmforge
-	#if not exists('/etc/yum.repos.d/rpmforge.repo'):
-	#	ins_repo = 'http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm'
-	#	run('[ ! -f /etc/yum.repos.d/mirrors-rpmforge ] && yum -y -q install '+ ins_repo)
+		run('mv -f /etc/yum.repos.d/CentOS-* /etc/yum.repos.d/old/')
 	run('yum clean all')
+	run('yum repolist')
 	ins_pkgs = 'system-config-network-tui wget vim git sysstat perl ntp yum-plugin-priorities htop lsof mlocate man openssh-client nc lynx htop bind-utils nfs-utils nfs-utils-lib acpid'
 	run('yum -y -q install '+ ins_pkgs)
-	run('yum -y -q update')
+	#run('yum -y -q update')
 
 def prep_rhel6():
 	set_yum('rhel')
