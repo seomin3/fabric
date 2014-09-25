@@ -23,7 +23,7 @@ PUPPET_DIR='/repo/puppet'
 PUPPET_URL="yum.puppetlabs.com/packages/yum/el/6.5/"
 
 # create directory
-for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR $RPMFORGE_DIR $FOREMAN_DIR $PUPPET_DIR
+for i in $BASE_DIR $UPDATE_DIR $EXTRA_DIR $EPEL6_DIR $RPMFORGE_DIR $FOREMAN_DIR $PUPPET_DIR openstack-icehouse
 do
 	[ ! -d $i ] && mkdir -p $i
 done
