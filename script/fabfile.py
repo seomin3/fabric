@@ -3,21 +3,21 @@ from fabric.contrib.files import exists
 execfile('./fabenv.py')
 
 def horizon():
-	put('/opt/git/openstack/install/*', '/opt/')
+	put('/opt/git/openstack/sandbox/*', '/opt/')
 	with cd('/opt'):
 		run('pwd')
 		run('chmod 744 *sh')
 		run('./install_horizon.sh')
 
 def glance():
-	put('/opt/git/openstack/install/*', '/opt/')
+	put('/opt/git/openstack/sandbox/*', '/opt/')
 	with cd('/opt'):
 		run('pwd')
 		run('chmod 744 *sh')
 		run('./install_glance.sh')
 
 def keystone():
-	put('/opt/git/openstack/install/*', '/opt/')
+	put('/opt/git/openstack/sandbox/*', '/opt/')
 	with cd('/opt'):
 		run('pwd')
 		run('chmod 744 *sh')
