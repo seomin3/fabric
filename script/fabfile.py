@@ -2,12 +2,12 @@ from fabric.api import *
 from fabric.contrib.files import exists
 execfile('./fabenv.py')
 
-def keystone():
+def horizon():
 	put('/opt/git/openstack/install/*', '/opt/')
 	with cd('/opt'):
 		run('pwd')
 		run('chmod 744 *sh')
-		run('./install_keystone.sh')
+		run('./install_horizon.sh')
 
 def glance():
 	put('/opt/git/openstack/install/*', '/opt/')
@@ -16,12 +16,12 @@ def glance():
 		run('chmod 744 *sh')
 		run('./install_glance.sh')
 
-def horizon():
+def keystone():
 	put('/opt/git/openstack/install/*', '/opt/')
 	with cd('/opt'):
 		run('pwd')
 		run('chmod 744 *sh')
-		run('./install_horizon.sh')
+		run('./install_keystone.sh')
 
 def set_service(name, op):
 	if exists('/etc/init.d/' + name):
@@ -31,6 +31,10 @@ def set_service(name, op):
 		elif op == 'stop':
 			run('chkconfig ' + name + ' off')
 			run('service ' + name + ' stop')
+
+def get_etc():
+	with cd('/opt'):
+		run('tar --exclude=./pki --exclude=./selinux/targeted -cf - ./ | xz -9 -c - > /var/tmp/$(hostname)_etc.tar.xz')
 
 def set_ntp():
 	set_service('ntpd', 'stop')
@@ -44,11 +48,11 @@ def set_yum(arch):
 		put('../repo/local-cent6.repo', '/etc/yum.repos.d/')
 	if exists('/etc/yum.repos.d/CentOS-Base.repo'):
 		run('mkdir -p /etc/yum.repos.d/old')
-		run('mv -f /etc/yum.repos.d/CentOS-* /etc/yum.repos.d/old/')
+		run('find /etc/yum.repos.d/ -maxdepth 1 -type f \( ! -iname "local-cent6.repo" \) -exec mv -f {} /etc/yum.repos.d/old \;')
 	run('yum clean all')
-	run('yum repolist')
+	run('yum -d 1 repolist')
 	ins_pkgs = 'system-config-network-tui wget vim git sysstat perl ntp yum-plugin-priorities htop lsof mlocate man openssh-client nc lynx htop bind-utils nfs-utils nfs-utils-lib acpid'
-	run('yum -y -q install '+ ins_pkgs)
+	run('yum -y -d 1 install '+ ins_pkgs)
 	#run('yum -y -q update')
 
 def prep_rhel6():
@@ -66,7 +70,10 @@ def prep_rhel6():
 def prep_cent6():
 	set_yum('cent')
 	set_ntp()
+	start_service = 'acpid'
 	stop_service = 'iptables'
+	for i in start_service.split():
+		set_service(i, 'start')
 	for i in stop_service.split():
 		set_service(i, 'stop')
 	run('perl -pi -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config')
