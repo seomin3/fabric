@@ -1,5 +1,5 @@
 #!/bin/bash
-COMPRESS=1
+COMPRESS=0
 REPO_URL='ftp.jaist.ac.jp'
 # CentOS
 BASE_DIR='/repo/centos-base'
@@ -50,7 +50,7 @@ reposync -r openstack-icehouse -p /repo > /repo/openstack-icehouse/reposync.log 
 
 
 # compress
-if [ $COMPRESS -eq 1 ]
+if [ "$COMPRESS" -eq "1" ]
 then
 	BACKUP_DIR='/newdrive/archive/'	
 	for i in puppet foreman rpmforge epel6 centos-extra centos-update centos-base openstack-icehouse
@@ -63,3 +63,9 @@ then
 		[ ! -d "/repo/$i/repodata" ] && createrepo /repo/$i/repodata
 	done
 fi
+
+# create repodata
+for i in puppet foreman rpmforge epel6 centos-extra centos-update centos-base openstack-icehouse
+do
+    [ ! -d "/repo/$i/repodata" ] && createrepo /repo/$i/repodata
+done
