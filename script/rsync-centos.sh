@@ -59,5 +59,7 @@ then
 		[ -f "$BACKUP_FILE" ] && rm -f $BACKUP_FILE
 		cd /repo
 		tar -cf - $i | xz -9 -c - > $BACKUP_FILE
+
+		[ ! -d "/repo/$i/repodata" ] && createrepo /repo/$i/repodata
 	done
 fi
