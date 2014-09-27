@@ -67,5 +67,5 @@ fi
 # create repodata
 for i in puppet foreman rpmforge epel6 centos-extra centos-update centos-base openstack-icehouse
 do
-    [ ! -d "/repo/$i/repodata" ] && createrepo /repo/$i/repodata
+    [ ! -d "/repo/$i/repodata" ] && createrepo /repo/$i
 done
