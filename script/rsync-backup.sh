@@ -1,4 +1,4 @@
-BACKUP_DIR='/newdrive/archive/'
+BACKUP_DIR='/srv/archive/'
 for i in puppet foreman rpmforge epel6 centos-extra centos-update centos-base
 do
 	BACKUP_FILE="$BACKUP_DIR/$i.tar.xz"

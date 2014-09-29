@@ -1,7 +1,14 @@
 from fabric.api import *
 from fabric.contrib.files import exists
-execfile('./fabenv.py')
+execfile('./env.py')
 
+def hypervisor():
+	put('/opt/git/openstack/sandbox/*', '/opt/')
+	with cd('/opt'):
+		run('pwd')
+		run('chmod 744 *sh')
+		run('./install_hypervisor.sh')
+        
 def horizon():
 	put('/opt/git/openstack/sandbox/*', '/opt/')
 	with cd('/opt'):
@@ -79,4 +86,4 @@ def prep_cent6():
 	run('perl -pi -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config')
 
 def reboot():
-	run('init 6')
+	run('sync && init 6')
