@@ -1,7 +1,7 @@
 from fabric.api import task, env
 from fabric.colors import magenta, blue
 
-env.hosts = ['cinder01']
+env.hosts = ['chef', 'knife']
 env.user = 'root'
 env.timeout = 30
 env.command_timeout = 1200
