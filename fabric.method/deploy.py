@@ -6,10 +6,18 @@ def go(basename):
         run('pwd')
         run('chmod 744 *sh')
         run(basename)
-@task
-def hypervisor():
-    go('./install_hypervisor.sh')
 
+@task
+def srv_nova():
+    go('./srv_install_nova.sh')
+
+@task
+def srv_cinder():
+    go('./srv_install_cinder.sh')
+@task
+def cinder():
+    go('./install_cinder.sh')
+    
 @task    
 def horizon():
     go('./install_horizon.sh')
@@ -21,7 +29,3 @@ def glance():
 @task    
 def keystone():
     go('./install_keystone.sh')
-
-@task
-def testrun():
-    run('df -h')
