@@ -3,7 +3,7 @@ from fabric.colors import magenta, blue
 from fabric.contrib.files import exists
 
 @task
-def hostname():
+def host():
     run('hostname')
 
 @task

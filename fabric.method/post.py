@@ -37,8 +37,9 @@ def set_yum(arch):
         run('find /etc/yum.repos.d/ -maxdepth 1 -type f \( ! -iname "local-cent6.repo" \) -exec mv -f {} /etc/yum.repos.d/old \;')
     run('yum clean all')
     run('yum -d 1 repolist')
-    ins_pkgs = 'system-config-network-tui wget vim git sysstat perl ntp yum-plugin-priorities htop lsof mlocate man openssh-client nc lynx htop bind-utils nfs-utils nfs-utils-lib acpid lrzsz'
+    ins_pkgs = 'system-config-network-tui wget vim git sysstat perl ntp yum-plugin-priorities htop lsof mlocate man openssh-client nc lynx htop bind-utils nfs-utils nfs-utils-lib acpid lrzsz parted tcpdump'
     run('yum -y -d 1 install '+ ins_pkgs)
+    run("echo 'export HISTTIMEFORMAT=\"[ %d/%m/%y %T ] \"' >> ~/.bash_profile")
 
 def prep_rhel6():
     set_yum('rhel')

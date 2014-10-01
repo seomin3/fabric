@@ -1,8 +1,9 @@
 from fabric.api import task, env
 from fabric.colors import magenta, blue
 
-env.hosts = ['chef', 'knife']
+env.hosts = ['192.168.122.182']
 env.user = 'root'
+env.password = 'cloud000'
 env.timeout = 30
 env.command_timeout = 1200
 env.warn_only = False
