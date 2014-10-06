@@ -5,6 +5,7 @@ from fabric.contrib.files import exists
 @task
 def host():
     run('hostname')
+    run('ifconfig|grep "inet addr"')
 
 @task
 def conf():
