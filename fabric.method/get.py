@@ -1,14 +1,9 @@
-from fabric.api import env, task, cd, run, get
+from fabric.api import task, cd, run, get
 from fabric.colors import magenta, blue
 from fabric.contrib.files import exists
 
 @task
-def host():
-    run('hostname')
-    run('ifconfig|grep "inet addr"')
-
-@task
-def conf():
+def conf_openstack():
     hostname = run('hostname')
     if exists('/tmp/%s-diff/' % hostname): run('rm -rf /tmp/%s-diff/' % hostname)
     project = 'keystone glance nova neutron cinder'
@@ -23,6 +18,6 @@ def conf():
         get('/tmp/%s-diff.tar.xz' % hostname, '/home/sysop/')
 
 @task
-def etc():
+def conf_etc():
     with cd('/etc'):
         run('tar --exclude=./pki --exclude=./selinux/targeted -cf - ./ | xz -9 -c - > /var/tmp/$(hostname)_etc.tar.xz')

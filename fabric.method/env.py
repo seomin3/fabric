@@ -1,7 +1,7 @@
 from fabric.api import task, env
 from fabric.colors import magenta, blue
 
-env.hosts = ['nova02']
+env.hosts = ['nova01', 'nova02']
 env.user = 'root'
 env.password = 'cloud000'
 env.timeout = 30
