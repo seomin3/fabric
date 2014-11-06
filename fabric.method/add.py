@@ -1,17 +1,20 @@
 import os
-from fabric.api import task, run
-
+from fabric.api import task, run, sudo
+  
 @task
 def user():
     RET = False
-    file = run('cat /etc/sudoers', quiet = True)
+    USER_NAME = 'user'
+    USER_PASS = 'pass!!'
+    USER_ID = '1506'
+    file = sudo('cat /etc/sudoers', quiet = True)
     for i in file.split('\n'):
-        if 'sysop   ALL=(ALL) NOPASSWD: ALL' in i: RET = True
-    run('userdel -r sysop; groupdel sysop', warn_only=True)
-    run('groupadd -g 1300 sysop')
-    run('useradd -m -u 1300 -g sysop -c kjahyeon@sptek.com sysop')
-    if RET == False: run('echo "sysop   ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers')
-    run('echo "sysop:b4r7q890!" | chpasswd')
+        if '%s   ALL=(ALL) ALL' % USER_NAME in i: RET = True
+    sudo('userdel -r %s' % (USER_NAME), warn_only=True)
+    sudo('groupadd -g %s %s' % (USER_ID, USER_NAME))
+    sudo('useradd -m -u %s -g %s %s' % (USER_ID, USER_NAME, USER_NAME))
+    if RET == False: sudo('echo "%s   ALL=(ALL) ALL" >> /etc/sudoers' % USER_NAME)
+    sudo('echo "%s:%s" | chpasswd' % (USER_NAME,USER_PASS))
     """
     Thanks to
     https://gist.github.com/btompkins/814870

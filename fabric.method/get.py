@@ -8,7 +8,7 @@ def conf_openstack():
     if exists('/tmp/%s-diff/' % hostname): run('rm -rf /tmp/%s-diff/' % hostname)
     project = 'keystone glance nova neutron cinder'
     for i in project.split():
-        if exists('/etc/%s' % i): 
+        if exists('/etc/%s' % i):
             run('mkdir -p /tmp/%s-diff/%s' % (hostname, i))
             with cd('/etc/%s' % i):
                 find = run("find ./ -maxdepth 1 -type f -name '*conf' -o -name '*ini'")

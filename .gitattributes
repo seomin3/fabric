@@ -1,3 +1,5 @@
+*.tar.xz -crlf -diff -merge
+
 # Auto detect text files and perform LF normalization
 * text=auto
 
