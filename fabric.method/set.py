@@ -3,6 +3,11 @@ from fabric.api import task, run, put, sudo, env
 import fuc
 
 @task
+def ulimit():
+    fuc.pushfile('neodc.conf', './docs/etc/limits.d/')
+    sudo('cp /tmp/fab/neodc.conf /etc/security/limits.d/')
+
+@task
 def disable_rootlogin():
     sudo('perl -pi -e "s/^PermitRootLogin yes/PermitRootLogin no/" /etc/ssh/sshd_config')
     sudo('grep -i PermitRootLogin /etc/ssh/sshd_config')

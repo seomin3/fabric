@@ -3,12 +3,10 @@ import os, sys
 sys.path.append('./fabric.method')
 # import inhouse method
 import env
-import add, deploy, env, get, post, set
+import add, deploy, env, get, post, set, install
 # import fabric api
 from fabric.api import task, run, cd
 
 @task
-def testrun():
-    run('hostname')
+def trun():
     run('df -h')
-    run('ifconfig eth0 | grep inet')

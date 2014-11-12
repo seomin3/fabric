@@ -3,6 +3,10 @@ from fabric.contrib.files import exists
 import fuc, set
 
 @task
+def yum():
+    fuc.prep_yum()
+
+@task
 def dcos():
     fuc.set_date()
     fuc.prep_yum()

@@ -1,12 +1,13 @@
 from fabric.api import run, put, sudo
+from fabric.contrib.files import exists
 
-def pushfile(pushfile, filepath='./docs/', tempdir='/tmp/'):
+def pushfile(pushfile, filepath='./docs/', tempdir='/tmp/fab/'):
     run('mkdir -p %s' % tempdir)
     put('%s%s' % (filepath, pushfile), '%s' % tempdir)
 
 def install_pkgs(rpm=''):
     clean_yum()
-    sudo('yum -d 1 -y install %s' rpm)
+    sudo('yum -d 1 -y install %s' % rpm)
 
 def set_service(name, op='start'):
     if exists('/etc/init.d/' + name):
@@ -25,7 +26,7 @@ def prep_yum():
     repofile = 'local-cent6.repo'
     pushfile(repofile)
     #sudo('mkdir -p /etc/yum.repos.d/old && find /etc/yum.repos.d/ -maxdepth 1 -type f \( ! -iname "local-cent6.repo" \) -exec mv -f {} /etc/yum.repos.d/old \;')
-    sudo('cp -f /tmp/sysop/%s /etc/yum.repos.d/' % repofile)
+    sudo('cp -f /tmp/fab/%s /etc/yum.repos.d/' % repofile)
     clean_yum()
 
 def clean_yum():
