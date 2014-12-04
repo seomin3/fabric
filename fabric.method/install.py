@@ -4,6 +4,11 @@ from fabric.api import task, run, sudo
 import fuc
 
 @task
+def hppmp():
+    fuc.pushfile('hp-pmp', '/home/sysop/work/')
+    sudo('rpm -Uvh /tmp/fab/hp-pmp/*rpm')
+
+@task
 def chrome():
     fuc.pushfile('chrome', '/home/sysop/work/')
     fuc.install_pkgs('policycoreutils-python')

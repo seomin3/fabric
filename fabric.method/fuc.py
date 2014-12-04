@@ -20,11 +20,13 @@ def set_service(name, op='start'):
 
 def set_date():
     sudo('service ntpd stop')
-    sudo('ntpdate -b 192.168.1.190 && service ntpd start')
+    sudo('ntpdate -b 203.235.222.174 && service ntpd start')
+    sudo('date')
+    sudo('ntpq -pn')
 
 def prep_yum():
     repofile = 'local-cent6.repo'
-    pushfile(repofile)
+    pushfile(repofile, filepath='./docs/etc/')
     #sudo('mkdir -p /etc/yum.repos.d/old && find /etc/yum.repos.d/ -maxdepth 1 -type f \( ! -iname "local-cent6.repo" \) -exec mv -f {} /etc/yum.repos.d/old \;')
     sudo('cp -f /tmp/fab/%s /etc/yum.repos.d/' % repofile)
     clean_yum()

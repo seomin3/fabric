@@ -7,11 +7,13 @@ from fabric.colors import magenta, blue
 '''
 # Set env.hosts
 hosttype = 'file'
-hostfile = 'hostfile.swift'
+#hosttype = ''
+hostfile = 'hostfile.all'
 env.hosts = ['']
+
 # Set fabric env
 env.user = 'sysop'
-env.password = 'pass!!'
+env.password = 'b4r7q890!'
 env.timeout = 30
 env.command_timeout = 1200
 env.warn_only = False

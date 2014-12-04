@@ -6,7 +6,7 @@ def user():
     RET = False
     USER_NAME = 'user'
     USER_PASS = 'pass!!'
-    USER_ID = '1506'
+    USER_ID = '1501'
     file = sudo('cat /etc/sudoers', quiet = True)
     for i in file.split('\n'):
         if '%s   ALL=(ALL) ALL' % USER_NAME in i: RET = True

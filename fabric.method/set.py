@@ -3,6 +3,14 @@ from fabric.api import task, run, put, sudo, env
 import fuc
 
 @task
+def rsyslog_sudo():
+    fuc.pushfile('sudo.conf', './docs/etc/')
+    fuc.pushfile('syslog', './docs/etc/')
+    sudo('cp /tmp/fab/sudo.conf /etc/rsyslog.d/')
+    sudo('cp /tmp/fab/syslog /etc/logrotate.d/')
+    sudo('service rsyslog restart')
+
+@task
 def ulimit():
     fuc.pushfile('neodc.conf', './docs/etc/limits.d/')
     sudo('cp /tmp/fab/neodc.conf /etc/security/limits.d/')
@@ -29,16 +37,16 @@ def resetpw():
 def ntp():
     ntpserver = 'dcos-glance-storage'
     if env.host != ntpserver:
-        fuc.pushfile('ntp.conf')
-        sudo('cp -f /tmp/ntp.conf /etc/')
+        fuc.pushfile('./etc/ntp.conf')
+        sudo('cp -f /tmp/fab/ntp.conf /etc/')
         fuc.set_date()
 
 @task
 def hosts():
-    hostfile = './docs/hosts'
-    put('%s' % hostfile, '/tmp/sysop')
+    hostfile = './etc/hosts'
+    fuc.pushfile(hostfile)
     sudo('mkdir -p /etc/backup; cp /etc/hosts /etc/backup/hosts-$(date +%y%m%d)')
-    sudo('cp /tmp/sysop/hosts /etc/hosts')
+    sudo('cp /tmp/fab/hosts /etc/hosts')
 
 '''
 @task
@@ -60,10 +68,4 @@ def lv_compute():
     sudo('echo "/dev/vg/lv_compute      /var/lib/nova           ext4    defaults        0 0" >> /etc/fstab')
     sudo('mkdir -p /var/lib/nova')
     sudo('mount -a')
-def gw():
-    sudo('perl -pi -e "s/GATEWAY=150.24.223.1/GATEWAY=150.24.223.2/g" /etc/sysconfig/network-scripts/ifcfg-eth0', warn_only=True)
-    sudo('perl -pi -e "s/GATEWAY=150.24.223.1/GATEWAY=150.24.223.2/g" /etc/sysconfig/network', warn_only=True)
-    sudo('perl -pi -e "s/GATEWAY=150.24.223.1/GATEWAY=150.24.223.2/g" /etc/sysconfig/network-scripts/ifcfg-em1', warn_only=True)
-    sudo('service network restart')
-    sudo('route -n')
 '''

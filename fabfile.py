@@ -5,8 +5,8 @@ sys.path.append('./fabric.method')
 import env
 import add, deploy, env, get, post, set, install
 # import fabric api
-from fabric.api import task, run, cd
+from fabric.api import task, run, cd, sudo
 
 @task
 def trun():
-    run('df -h')
+    sudo('w')

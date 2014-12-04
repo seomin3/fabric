@@ -2,7 +2,7 @@
 IFS='
 '
 VM_PROJECT=$1
-NET_ID=09ca9b4c-20c6-4058-9361-fa9c24cca210
+NET_ID=a060bb48-dd8d-4559-b782-73fea03505f4
 for i in $(nova image-list | grep $VM_PROJECT); do
     VM_ID=$(echo $i | awk '{ print $2 }')
     VM_NAME=$(echo $i | awk '{ print $4 }')

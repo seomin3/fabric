@@ -38,13 +38,10 @@ def go(basename):
         sudo('chmod 744 *sh')
         sudo(basename)
 
-'''
-
 @task
 def ladvd():
     fuc.pushfile('*', '/home/sysop/work/ladvd/', '/tmp/ladvd/')
-    sudo('rpm -ivh /tmp/ladvd/ladvd-1.0.4-1.el6.x86_64.rpm', warn_only=True)
+    #sudo('rpm -ivh /tmp/ladvd/ladvd-1.0.4-1.el6.x86_64.rpm', warn_only=True)
     sudo('cp -f /tmp/ladvd/ladvd /etc/sysconfig/')
     sudo('chkconfig ladvd on && service ladvd restart')
 
-'''

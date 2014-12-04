@@ -4,6 +4,10 @@ from fabric.contrib.files import exists
 import fuc
 
 @task
+def ladvd():
+    run('grep -i LADVD_OPTION /etc/sysconfig/ladvd')
+
+@task
 def openstack():
     hostname = run('hostname')
     backupdate = run('date +%y%m%d')
