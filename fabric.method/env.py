@@ -13,7 +13,7 @@ env.hosts = ['']
 
 # Set fabric env
 env.user = 'sysop'
-env.password = 'b4r7q890!'
+env.password = 'pass!'
 env.timeout = 30
 env.command_timeout = 1200
 env.warn_only = False
