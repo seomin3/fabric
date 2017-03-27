@@ -10,8 +10,8 @@ def gmond():
 
 @task
 def rsyslog_sudo():
-    fuc.pushfile('sudo.conf', './docs/etc/')
-    fuc.pushfile('syslog', './docs/etc/')
+    fuc.pushfile('sudo.conf', './doc/etc/')
+    fuc.pushfile('syslog', './doc/etc/')
     sudo('cp /tmp/fab/sudo.conf /etc/rsyslog.d/')
     sudo('cp /tmp/fab/syslog /etc/logrotate.d/')
     sudo('service rsyslog restart')
