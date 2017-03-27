@@ -48,3 +48,8 @@ for i in hostlist.split():
 '''
 def get():
     print("Executing on %s as %s" % (magenta(env.host), blue(env.user)))
+
+# get.perf()
+f = open('/tmp/result.txt', 'w')
+f.write('')
+f.close()
