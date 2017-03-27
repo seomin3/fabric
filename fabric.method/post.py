@@ -19,6 +19,7 @@ def dcos():
 '''
 def reboot():
     sudo('sync && init 6')
+
 def prep_rhel6():
     set_yum('rhel')
     set_ntp()
@@ -28,6 +29,7 @@ def prep_rhel6():
     for i in stop_service.split(): fuc.set_service(i, 'stop')
     sudo('perl -pi -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config')
     sudo('perl -pi -e "s/plugins=1/plugins=0/" /etc/yum.conf')
+
 @task
 def cent6():
     fuc.set_date()
@@ -37,4 +39,5 @@ def cent6():
     for i in start_service.split(): fuc.set_service(i, 'start')
     for i in stop_service.split(): fuc.set_service(i, 'stop')
     sudo('perl -pi -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config')
+    
 '''

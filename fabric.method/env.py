@@ -25,7 +25,7 @@ env.colorize_errors = True
 if hosttype == 'file':
     env.hosts = []
     try:
-        file = open('./docs/%s' % hostfile, 'r')
+        file = open('./doc/%s' % hostfile, 'r')
         for data in file:
             line = data.strip('\n')
             if line.find('#') != 0: env.hosts.append(line)

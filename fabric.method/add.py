@@ -1,6 +1,6 @@
 import os
 from fabric.api import task, run, sudo
-  
+
 @task
 def user():
     RET = False
@@ -15,6 +15,7 @@ def user():
     sudo('useradd -m -u %s -g %s %s' % (USER_ID, USER_NAME, USER_NAME))
     if RET == False: sudo('echo "%s   ALL=(ALL) ALL" >> /etc/sudoers' % USER_NAME)
     sudo('echo "%s:%s" | chpasswd' % (USER_NAME,USER_PASS))
+
     """
     Thanks to
     https://gist.github.com/btompkins/814870

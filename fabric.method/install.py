@@ -4,6 +4,11 @@ from fabric.api import task, run, sudo
 import fuc
 
 @task
+def gmond():
+    fuc.install_pkgs('ganglia-gmond')
+    fuc.set_service('gmond')
+
+@task
 def hppmp():
     fuc.pushfile('hp-pmp', '/home/sysop/work/')
     sudo('rpm -Uvh /tmp/fab/hp-pmp/*rpm')
@@ -12,7 +17,7 @@ def hppmp():
 def chrome():
     fuc.pushfile('chrome', '/home/sysop/work/')
     fuc.install_pkgs('policycoreutils-python')
-    sudo('rpm -Uvh /tmp/fab/chrome/*')
+    sudo('rpm -Uvh /tmp/fab/chrome/*', warn_only=True)
 
 @task
 def ko_font():
@@ -25,7 +30,7 @@ def zabbix_agent():
     sudo('perl -pi -e "s/ServerActive=127.0.0.1/ServerActive=192.168.1.24/" /etc/zabbix/zabbix_agentd.conf')
     fuc.set_service('zabbix-agent')
     sudo('tail -n 10 /var/log/zabbix/zabbix_agentd.log')
-    
+
 @task
 def vertx():
     RET = False
@@ -34,10 +39,10 @@ def vertx():
     sudo('ln -sf /usr/neodc/sw/vert.x-2.1.2 /usr/neodc/sw/vertx')
     file = sudo('cat /etc/profile', quiet = True)
     for i in file.split('\n'):
-        if 'VERTX_HOME' in i: RET = True
+    if 'VERTX_HOME' in i: RET = True
     if RET == False:
-        sudo('echo "export VERTX_HOME=/usr/neodc/sw/vertx" >> /etc/profile')
-        sudo('echo "export PATH=$PATH:$VERTX_HOME/bin:$ANT_HOME/bin" >> /etc/profile')
+    sudo('echo "export VERTX_HOME=/usr/neodc/sw/vertx" >> /etc/profile')
+    sudo('echo "export PATH=$PATH:$VERTX_HOME/bin:$ANT_HOME/bin" >> /etc/profile')
     sudo('source /etc/profile')
     run('vertx version')
 
@@ -45,6 +50,8 @@ def vertx():
 def java():
     fuc.pushfile('*', '/home/sysop/work/jdk/', '/tmp/jdk/')
     sudo('rpm -ivh /tmp/jdk/jdk-7u71-linux-x64.rpm', warn_only=True)
+    sudo("alternatives --install '/usr/bin/java' java '/usr/java/default/bin/java' 10")
+    sudo("alternatives --install '/usr/bin/javac' javac '/usr/java/default/bin/javac' 10")
     run('java -version')
     run('javac -version')
 

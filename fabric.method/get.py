@@ -7,7 +7,7 @@ import fuc
 def ladvd():
     run('grep -i LADVD_OPTION /etc/sysconfig/ladvd')
 
-@task
+#@task
 def openstack():
     hostname = run('hostname')
     backupdate = run('date +%y%m%d')
@@ -23,22 +23,29 @@ def openstack():
             sudo('cp -r /etc/%s/ %s' % (i,backupdir))
     sudo('swift upload openstack-config %s' % backupdir, warn_only=True)
 
-#@task
-def conf_openstack():
-    hostname = run('hostname')
-    if exists('/tmp/%s-openstack/' % hostname): run('rm -rf /tmp/%s-openstack/' % hostname)
-    project = 'keystone glance nova neutron cinder ceilometer'
+@task
+def conf_os():
+    hostname = run('hostname -s')
+    backupdir = '/tmp/%s-os/' % hostname
+    backupdate = run('date +%y%m%d')
+    backup = '/tmp/%s.%s.os.tar.xz' % (hostname, backupdate)
+    if exists(backupdir): run('rm -rf %s' % backupdir)
+    project = 'keystone glance nova neutron cinder ceilometer swift'
     for i in project.split():
         if exists('/etc/%s' % i):
-            run('mkdir -p /tmp/%s-openstack/%s' % (hostname, i))
+            run('mkdir -p %s/%s' % (backupdir, i))
             with cd('/etc/%s' % i):
                 find = sudo("find ./ -maxdepth 1 -type f -name '*conf' -o -name '*ini'")
-                for j in find.split(): sudo("grep -v '^#\|^\s*$' %s > /tmp/%s-openstack/%s/%s" % (j, hostname, i, j))
-    with cd('/tmp/%s-openstack/' % hostname):
-        run('tar cf - ./ | xz -9 -c - > /tmp/%s-${date +%y%m%d}-openstack.tar.xz' % hostname)
-        #get('/tmp/%s-${date +%y%m%d}-openstack-.tar.xz' % hostname, '/home/sysop/')
+                for j in find.split(): sudo("grep -v '^#\|^\s*$' %s > %s/%s/%s" % (j, backupdir, i, j))
+    with cd(backupdir):
+        run('tar cf - ./ | xz -9 -c - > %s' % backup)
+        get(backup, '/home/sysop/tmp/')
 
 @task
 def conf_etc():
+    hostname = run('hostname -s')
+    backupdate = run('date +%y%m%d')
+    backup = '/tmp/%s.%s.etc.tar.xz' % (hostname, backupdate)
     with cd('/etc'):
-        sudo('tar --exclude=./pki --exclude=./selinux/targeted -cf - ./ | xz -9 -c - > /var/tmp/$(hostname)_etc.tar.xz')
+        sudo('tar --exclude=./pki --exclude=./selinux/targeted -cf - ./ | xz -9 -c - > %s' % backup)
+        get(backup, '/home/sysop')

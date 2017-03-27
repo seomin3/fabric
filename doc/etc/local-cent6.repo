@@ -1,0 +1,111 @@
+[local-centos-base]
+name=CentOS 6.5 Base
+baseurl=http://192.168.1.190/repo/centos-base/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-centos-update]
+name=CentOS Update
+baseurl=http://192.168.1.190/repo/centos-update/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-centos-extra]
+name=CentOS 6.5 Extra
+baseurl=http://192.168.1.190/repo/centos-extra/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-centos-epel6]
+name=Fedora epel6
+baseurl=http://192.168.1.190/repo/epel6/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-rpmforge]
+name=rpmforge
+baseurl=http://192.168.1.190/repo/rpmforge/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-puppet-products]
+name=Puppet Products
+baseurl=http://192.168.1.190/repo/puppet/products/x86_64/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-puppet-dependencies]
+name=Puppet Dependencies
+baseurl=http://192.168.1.190/repo/puppet/dependencies/x86_64/
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-foreman-releases]
+name=Foreman Releases
+baseurl=http://192.168.1.190/repo/foreman/releases/1.5/el6/x86_64
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-foreman-plugins]
+name=Foreman Plugins
+baseurl=http://192.168.1.190/repo/foreman/plugins/1.5/el6/x86_64
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-openstack-icehouse]
+name=RDO Icehouse
+baseurl=http://192.168.1.190/repo/openstack-icehouse
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-zabbix]
+name=Zabbix
+baseurl=http://192.168.1.190/repo/zabbix
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-pgdg93]
+name=PostgreSQL 9.3
+baseurl=http://192.168.1.190/repo/pgdg93
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-ceph]
+name=Ceph el6 x86_64
+baseurl=http://192.168.1.190/repo/ceph
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-ceph-noarch]
+name=Ceph el6 noarch
+baseurl=http://192.168.1.190/repo/ceph-noarch
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-network_ha-clustering]
+name=OpenSUSE ha-clustering repository
+baseurl=http://192.168.1.190/repo/network_ha-clustering
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1
+
+[local-elrepo]
+name=elrepo
+baseurl=http://192.168.1.190/repo/elrepo
+enabled=1
+gpgcheck=0
+skip_if_unavailable=1

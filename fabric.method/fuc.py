@@ -1,7 +1,7 @@
 from fabric.api import run, put, sudo
 from fabric.contrib.files import exists
 
-def pushfile(pushfile, filepath='./docs/', tempdir='/tmp/fab/'):
+def pushfile(pushfile, filepath='./doc/', tempdir='/tmp/fab/'):
     run('mkdir -p %s' % tempdir)
     put('%s%s' % (filepath, pushfile), '%s' % tempdir)
 
@@ -26,7 +26,7 @@ def set_date():
 
 def prep_yum():
     repofile = 'local-cent6.repo'
-    pushfile(repofile, filepath='./docs/etc/')
+    pushfile(repofile, filepath='./doc/etc/')
     #sudo('mkdir -p /etc/yum.repos.d/old && find /etc/yum.repos.d/ -maxdepth 1 -type f \( ! -iname "local-cent6.repo" \) -exec mv -f {} /etc/yum.repos.d/old \;')
     sudo('cp -f /tmp/fab/%s /etc/yum.repos.d/' % repofile)
     clean_yum()

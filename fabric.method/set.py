@@ -3,6 +3,12 @@ from fabric.api import task, run, put, sudo, env
 import fuc
 
 @task
+def gmond():
+    fuc.pushfile('gmond.conf', './doc/etc/ganglia/')
+    sudo('cp /tmp/fab/gmond.conf /etc/ganglia/')
+    sudo('service gmond restart')
+
+@task
 def rsyslog_sudo():
     fuc.pushfile('sudo.conf', './docs/etc/')
     fuc.pushfile('syslog', './docs/etc/')
@@ -12,7 +18,7 @@ def rsyslog_sudo():
 
 @task
 def ulimit():
-    fuc.pushfile('neodc.conf', './docs/etc/limits.d/')
+    fuc.pushfile('neodc.conf', './doc/etc/limits.d/')
     sudo('cp /tmp/fab/neodc.conf /etc/security/limits.d/')
 
 @task
@@ -49,7 +55,7 @@ def hosts():
     sudo('cp /tmp/fab/hosts /etc/hosts')
 
 '''
-@task
+
 def bash_history():
     RET = False
     file = run('cat ~/.bash_profile', quiet = True)
@@ -58,14 +64,23 @@ def bash_history():
     if RET == False:
         run("echo 'export HISTTIMEFORMAT=\"[ %d/%m/%y %T ] \"' >> ~/.bash_profile")
         sudo("echo 'export HISTTIMEFORMAT=\"[ %d/%m/%y %T ] \"' >> /root/.bash_profile")
-@task
+
 def novavnc():
     sudo('perl -pi -e "s/IPA:6080/IPB:6080/" /etc/nova/nova.conf')
     sudo('openstack-service restart nova')
+
 def lv_compute():
     sudo('lvcreate -L 2048G -n lv_compute vg')
     sudo('mkfs.ext4 /dev/vg/lv_compute')
     sudo('echo "/dev/vg/lv_compute      /var/lib/nova           ext4    defaults        0 0" >> /etc/fstab')
     sudo('mkdir -p /var/lib/nova')
     sudo('mount -a')
+
+def gw():
+    sudo('perl -pi -e "s/GATEWAY=150.24.223.1/GATEWAY=150.24.223.2/g" /etc/sysconfig/network-scripts/ifcfg-eth0', warn_only=True)
+    sudo('perl -pi -e "s/GATEWAY=150.24.223.1/GATEWAY=150.24.223.2/g" /etc/sysconfig/network', warn_only=True)
+    sudo('perl -pi -e "s/GATEWAY=150.24.223.1/GATEWAY=150.24.223.2/g" /etc/sysconfig/network-scripts/ifcfg-em1', warn_only=True)
+    sudo('service network restart')
+    sudo('route -n')
+
 '''
