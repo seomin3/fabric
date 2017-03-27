@@ -1,0 +1,91 @@
+heat_template_version: 2013-05-23
+description: zabbix-server
+parameters:
+  key_name:
+    description: name of a key pair to enable SSH access to the instances
+    type: string
+    default: Test
+  instance_type:
+    description: instance type for server
+    type: string
+    default: m1.small
+    constraints:
+      - allowed_values: [m1.tiny, m1.small, m1.medium, m1.large, m1.xlarge]
+        description: must be a valid instance type
+  network_type:
+    type: string
+    default: da119ab9-9e6c-411d-ba24-2dcd131d44e7
+  zone_type:
+    type: string
+    default: nova
+  user_name:
+    description: user name for OpenShift login
+    type: string
+    default: cloud
+  password:
+    description: password for OpenShift login
+    type: string
+    default: cloud000@
+  dbname:
+    type: string
+    default: zabbix
+  dbuser_name:
+    type: string
+    default: zabbix
+  dbuser_pass:
+    type: string
+    default: zabbix_pass
+  dbroot_pass:
+    type: string
+    default: database_pass
+  
+
+resources:
+  zabbix:
+    type: OS::Nova::Server
+    properties:
+      image: CentOS-6-x86_64-Minimal.qcow2-141120
+      flavor: {get_param: instance_type}
+      key_name: {get_param: key_name}
+      availability_zone: {get_param: zone_type}
+      networks: 
+        - network: {get_param: network_type}
+      user_data:
+        str_replace:
+          template: |
+            #!/bin/bash -v
+
+            yum -y install mysql-server zabbix-server-mysql zabbix-web-mysql zabbix-web zabbix-agent zabbix-get
+            chkconfig mysqld on
+            service mysqld start
+            
+            # setup mysql root password
+            mysqladmin -u root password $dbroot_pass
+            cat << EOF | mysql -uroot -p$dbroot_pass
+            CREATE DATABASE $dbname CHARACTER SET utf8;
+            GRANT ALL PRIVILEGES ON $dbuser_name.* TO $dbuser_name@localhost IDENTIFIED BY '$dbuser_pass';
+            FLUSH PRIVILEGES;
+            EXIT
+            EOF
+            
+            # zabbix schema
+            mysql -u$dbuser_name -p$dbuser_pass zabbix < /usr/share/doc/zabbix-server-mysql-2.2.7/create/schema.sql
+            mysql -u$dbuser_name -p$dbuser_pass zabbix < /usr/share/doc/zabbix-server-mysql-2.2.7/create/images.sql
+            mysql -u$dbuser_name -p$dbuser_pass zabbix < /usr/share/doc/zabbix-server-mysql-2.2.7/create/data.sql
+            
+            # zabbix config
+            perl -pi -e "s/# DBPassword=/DBPassword=$dbuser_pass/" /etc/zabbix/zabbix_server.conf
+            perl -pi -e "s/\;date.timezone =/date.timezone = Asia\/Seoul/" /etc/php.ini
+
+            # running apache
+            service httpd start
+            service zabbix-server start
+            
+          params:
+            $user_name: { get_param: user_name }
+            $password: { get_param: password }
+            $dbname: { get_param: dbname }
+            $dbuser_name: { get_param: dbuser_name }
+            $dbuser_pass: { get_param: dbuser_pass }
+            $dbroot_pass: { get_param: dbroot_pass }
+

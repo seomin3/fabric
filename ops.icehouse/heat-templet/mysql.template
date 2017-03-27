@@ -1,0 +1,139 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "A Database instance running a local MySQL server",
+
+  "Parameters" : {
+
+    "InstanceType" : {
+      "Description" : "Database server EC2 instance type",
+      "Type" : "String",
+      "AllowedValues" : [ "m1.tiny", "m1.small", "m1.medium", "m1.large", "m1.xlarge" ],
+      "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+
+    "DBName": {
+      "Description" : "The database name",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "64",
+      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+    },
+
+    "DBUsername": {
+      "NoEcho": "true",
+      "Description" : "The database admin account username",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "16",
+      "AllowedPattern" : "[a-zA-Z][a-zA-Z0-9]*",
+      "ConstraintDescription" : "must begin with a letter and contain only alphanumeric characters."
+    },
+
+    "DBPassword": {
+      "NoEcho": "true",
+      "Description" : "The database admin account password",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "41",
+      "AllowedPattern" : "[a-zA-Z0-9]*",
+      "ConstraintDescription" : "must contain only alphanumeric characters."
+    },
+
+    "DBRootPassword": {
+      "NoEcho": "true",
+      "Description" : "Root password for MySQL",
+      "Type": "String",
+      "MinLength": "1",
+      "MaxLength": "41",
+      "AllowedPattern" : "[a-zA-Z0-9]*",
+      "ConstraintDescription" : "must contain only alphanumeric characters."
+    },
+    "LinuxDistribution": {
+      "Description" : "Distribution of choice",
+      "Type": "String",
+      "AllowedValues" : [ "CentOS", "F17" ],
+      "Default": "CentOS"
+    }
+  },
+
+  "Mappings" : {
+    "AWSInstanceType2Arch" : {
+      "m1.tiny"    : { "Arch" : "32" },
+      "m1.small"    : { "Arch" : "64" },
+      "m1.medium"    : { "Arch" : "64" },
+      "m1.large"   : { "Arch" : "64" },
+      "m1.xlarge"   : { "Arch" : "64" }
+    },
+    "DistroArch2AMI": {
+      "CentOS"   : { "32" : "CentOS-6-x86_64-Minimal.qcow2-141120", "64" : "CentOS-6-x86_64-Minimal.qcow2-141120" },
+      "F17"      : { "32" : "F17-i386-cfntools", "64" : "F17-x86_64-cfntools" }
+    }
+  },
+
+  "Resources" : {
+    "MySqlDatabaseServer": {
+      "Type": "AWS::EC2::Instance",
+      "Metadata" : {
+        "AWS::CloudFormation::Init" : {
+          "config" : {
+            "packages" : {
+              "yum" : {
+                "mysql"        : [],
+                "mysql-server" : []
+              }
+            },
+            "services" : {
+              "systemd" : {
+                "mysqld"   : { "enabled" : "true", "ensureRunning" : "true" }
+              }
+            }
+          }
+        }
+      },
+      "Properties": {
+        "ImageId" : { "Fn::FindInMap" : [ "DistroArch2AMI", { "Ref" : "LinuxDistribution" },
+                          { "Fn::FindInMap" : [ "AWSInstanceType2Arch", { "Ref" : "InstanceType" }, "Arch" ] } ] },
+        "InstanceType"   : { "Ref" : "InstanceType" },
+		"SubnetId" : "b87ebc98-fe6f-428f-8bf2-b1c99ff4c7d8",
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+          "#!/bin/bash -v\n",
+
+          "# Setup MySQL root password and create a user\n",
+          "mysqladmin -u root password '", { "Ref" : "DBRootPassword" }, "'\n",
+          "cat << EOF | mysql -u root --password='", { "Ref" : "DBRootPassword" }, "'\n",
+          "CREATE DATABASE ", { "Ref" : "DBName" }, ";\n",
+          "GRANT ALL PRIVILEGES ON ", { "Ref" : "DBName" }, ".* TO \"", { "Ref" : "DBUsername" }, "\"@\"%\"\n",
+          "IDENTIFIED BY \"", { "Ref" : "DBPassword" }, "\";\n",
+          "FLUSH PRIVILEGES;\n",
+          "EXIT\n",
+          "EOF\n",
+          "# All is well so signal success\n",
+          { "Ref" : "MySqlWaitHandle" }, "'\n"
+        ]]}}
+      }
+    },
+
+    "MySqlWaitHandle" : {
+      "Type" : "AWS::CloudFormation::WaitConditionHandle"
+    },
+
+    "MySqlWaitCondition" : {
+      "Type" : "AWS::CloudFormation::WaitCondition",
+      "DependsOn" : "MySqlDatabaseServer",
+      "Properties" : {
+        "Handle" : {"Ref" : "MySqlWaitHandle"},
+        "Timeout" : "600"
+      }
+    }
+
+  },
+
+  "Outputs" : {
+    "PublicIp": {
+      "Value": { "Fn::GetAtt" : [ "MySqlDatabaseServer", "PublicIp" ] },
+      "Description": "Database server IP"
+    }
+  }
+}
