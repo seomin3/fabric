@@ -3,6 +3,12 @@ from fabric.contrib.files import exists
 import fuc, set
 
 @task
+def zabbix_agent():
+    fuc.pushfile('zabbix_agentd.conf', './etc/zabbix/')
+    sudo('cp /tmp/fab/zabbix_agentd.conf /etc/zabbix/')
+    sudo('service zabbix-agent restart')
+
+@task
 def yum():
     fuc.prep_yum()
 
@@ -39,5 +45,5 @@ def cent6():
     for i in start_service.split(): fuc.set_service(i, 'start')
     for i in stop_service.split(): fuc.set_service(i, 'stop')
     sudo('perl -pi -e "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config')
-    
+
 '''
