@@ -18,14 +18,17 @@ class keystoneclient(object):
         ops_domain = os.environ['OS_USER_DOMAIN_NAME']
         ops_project_domain = os.environ['OS_PROJECT_DOMAIN_NAME']
 
-        auth = v3.Password(auth_url=ops_auth,
-                           username=ops_user,
-                           password=ops_pass,
-                           project_name=ops_project,
-                           user_domain_name=ops_domain,
-                           project_domain_name=ops_project_domain)
-        sess = session.Session(auth=auth,
-                               verify='')
+        auth = v3.Password(
+            auth_url=ops_auth,
+            username=ops_user,
+            password=ops_pass,
+            project_name=ops_project,
+            user_domain_name=ops_domain,
+            project_domain_name=ops_project_domain
+        )
+        sess = session.Session(auth=auth, verify='')
+        print("keystone -> user: %s, tenant: %s ===\n" % (ops_user, ops_project))
+
         return sess
 
 if __name__ == "__main__":

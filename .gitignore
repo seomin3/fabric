@@ -1,3 +1,10 @@
+# openstack
+service.osrc
+# venv
+include/
+lib/
+local/
+# ide
 .idea/
 tmp/
 #################

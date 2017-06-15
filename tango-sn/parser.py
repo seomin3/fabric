@@ -13,19 +13,26 @@ class parser(object):
     def append_data(self):
         try:
             if self.parser_type == 'server' and self.data[2] == 'VM':
-                self.parsed_data.append([self.data[1],  # tenant
-                                         re.sub(r'[\xc2\xa0]', '', self.data[3]),  # name
-                                         self.data[8],   # network
-                                         self.data[7],   # 90 net
-                                         self.data[9],   # 60 net
-                                         self.data[11],  # 150 net
-                                         self.data[13],  # 70 net
-                                         self.data[15]])   # 220 net
+                self.parsed_data.append([
+                    self.data[1],  # tenant
+                    re.sub(r'[\xc2\xa0]', '', self.data[3]),  # name
+                    self.data[8],   # network
+                    self.data[7],   # 90 net
+                    self.data[10],   # 60 net
+                    self.data[12],  # 150 net
+                    self.data[14],  # 70 net
+                    self.data[16]   # 200 net
+                ])   # 220 net
             elif self.parser_type == 'epg':
                 if not self.data[1].isalpha(): return False
-                self.parsed_data.append([self.data[1],  # subnet
-                                         self.data[0],  # name
-                                         re.sub(r'\r\n', '', self.data[2])]) # dhcp
+                self.parsed_data.append([
+                    self.data[0],  # subnet
+                    self.data[1],  # tenant
+                    self.data[2],  # name
+                    self.data[3],  # dhcp1
+                    re.sub(r'\r\n', '', self.data[4]),  # dhcp2
+                    re.sub(r'\r\n', '', self.data[5])   # gw
+                ]) # dhcp
         except IndexError:
             #print('unexcept error: %s' % self.data)
             return False
@@ -36,6 +43,7 @@ class parser(object):
             while True:
                 self.data = excel_data.readline()
                 if not self.data: break
+                self.data = re.sub('"', '', self.data)
                 self.data = self.data.split(",")
                 self.append_data()
         return self.parsed_data
