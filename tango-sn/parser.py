@@ -18,11 +18,11 @@ class parser(object):
                     re.sub(r'[\xc2\xa0]', '', self.data[3]),  # name
                     self.data[8],   # network
                     self.data[7],   # 90 net
-                    self.data[10],   # 60 net
-                    self.data[12],  # 150 net
+                    self.data[10],  # 60 net
                     self.data[14],  # 70 net
-                    self.data[16]   # 200 net
-                ])   # 220 net
+                    self.data[12],  # 150 net
+                    self.data[16]   # 220 net
+                ])
             elif self.parser_type == 'epg':
                 if not self.data[1].isalpha(): return False
                 self.parsed_data.append([
