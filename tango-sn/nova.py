@@ -7,25 +7,37 @@ import time
 from log import logassist
 
 class novaclient(object):
+    keystone_dev = ''
+    keystone_stag = ''
     session = client = ''
     server_list = {}
     server_port_list = []
     server_ip_list = []
     log = logassist()
+    server_tenant = []
 
-    def __init__(self, session):
-        self.session = session
-        self.client = client.Client('2.1', session=self.session)
+    def __init__(self, keystone_dev, keystone_stag):
+        self.keystone_dev = keystone_dev
+        self.keystone_stag = keystone_stag
         server_list =  {}
         server_port_list = []
         server_ip_list = []
+        self.server_tenant = ['DEV', 'STAG']
+
+    def get_client(self, net_tenant='DEV'):
+        if net_tenant == 'DEV':
+            self.client = client.Client('2.1', session=self.keystone_dev)
+        elif net_tenant == 'STAG':
+            self.client = client.Client('2.1', session=self.keystone_stag)
 
     def get_instance(self):
-        for item in self.client.servers.list():
-            self.server_list.update({
-                str(item.name): str(item.id)
-            })
-        print("nova -> instance, %s\n" % self.server_list)
+        for tenant in self.server_tenant:
+            self.get_client(tenant)
+            for item in self.client.servers.list():
+                self.server_list.update({
+                    str(item.name): str(item.id)
+                })
+        print("nova -> %s\n" % (self.server_list))
 
     def get_id(self, server):
         if server in self.server_list.keys():

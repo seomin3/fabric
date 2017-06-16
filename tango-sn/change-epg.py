@@ -18,7 +18,6 @@ def argparsers():
 def main():
     args = argparsers()
 
-    #csv_file = "C:\media\Dropbox\workspace\TANGO Staging EPG_R3.csv"
     server_file = 'servers.csv'
     epg_file = 'epg.csv'
 
@@ -30,23 +29,25 @@ def main():
 
     # connect to keystone
     keystone = keystoneclient()
-    session = keystone.session()
+    session_dev, session_stag = keystone.session()
 
     # connect to neutron
-    neutron = neutronclient(session)
+    neutron = neutronclient(session_dev, session_stag)
     net_list = neutron.get_network()
+
 
     # create network of tango
     if args.create_network:
         for item in epg_list:
             net_id = neutron.create_network(net_tenant=item[1], net_name=item[2])
-            neutron.create_subnet(
+            resp = neutron.create_subnet(
                 net_id=net_id, net_tenant=item[1],
                 net_name=item[2], sub_cidr=item[0],
                 sub_dhcp_start=item[3], sub_dhcp_end=item[4],
                 sub_gw=item[5]
             )
-        print("neutron -> %s" % neutron.get_network())
+            if resp == False: break
+        print("neutron epg -> %s" % neutron.get_network())
 
     # with debug
     if args.delete_network:
@@ -57,7 +58,7 @@ def main():
             if net_id: neutron.delete_network(net_id)
 
     # connect to nova
-    nova = novaclient(session)
+    nova = novaclient(session_dev, session_stag)
     nova.get_instance()
 
     for item in server_list:

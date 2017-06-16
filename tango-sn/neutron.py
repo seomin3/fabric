@@ -10,17 +10,18 @@ import traceback
 from log import logassist
 
 class neutronclient(object):
-    session = client = ''
+    keystone_dev =  ''
+    keystone_stag = ''
     client = ''
     net_list = {}
     net_prefix = net_suffix = ''
     log = logassist()
 
-    def __init__(self, session):
+    def __init__(self, keystone_dev, keystone_stag):
         self.net_prefix = 'TG.'
         self.net_suffix = '.EPG.VM.'
-        self.session = session
-        self.client = client.Client(session=self.session)
+        self.keystone_dev = keystone_dev
+        self.keystone_stag = keystone_stag
 
     def _ip2int(self, addr):
         return struct.unpack("!I", socket.inet_aton(str(addr)))[0]
@@ -28,10 +29,14 @@ class neutronclient(object):
     def _int2ip(self, addr):
         return socket.inet_ntoa(struct.pack("!I", addr))
 
-    def client(self):
-        self.client = client.Client(session=self.session)
+    def get_client(self, net_tenant='DEV'):
+        if net_tenant == 'DEV':
+            self.client = client.Client(session=self.keystone_dev)
+        elif net_tenant == 'STAG':
+            self.client = client.Client(session=self.keystone_stag)
 
     def get_network(self):
+        self.get_client()
         self.net_list = {}
         for item in self.client.list_networks()['networks']:
             self.net_list.update({
@@ -62,24 +67,26 @@ class neutronclient(object):
             return self.get_id('STAG', '220EXT')
 
     def create_network(self, net_tenant, net_name):
+        self.get_client(net_tenant)
         net_name, net_id = self.get_id(net_tenant=net_tenant, net_name=net_name)
         if net_name not in self.net_list.keys():
             body = { "network": {
-                "name": net_name, "provider:network_type": "vxlan",
+                "name": net_name, "provider:network_type": "opflex",
                 "provider:physical_network": "physnet1"
             }}
-            #body = { "network": {
-            #    "name": net_name, "provider:network_type": "vxlan"
-            #}}
+            body = { "network": {
+                "name": net_name, "provider:network_type": "vxlan"
+            }}
             try:
                 resp = self.client.create_network(body=body)
                 net_id = resp['network'].get('id')
-                print("[%s] create, net: %s" %
-                    (self.log.get_currenttime(), net_id))
+                print("[%s] create, net: %s, name: %s" %
+                    (self.log.get_currenttime(), net_id, net_name))
                 return net_id
             except:
                 print("[%s] REQ: %s" % (self.log.get_currenttime(), body))
                 traceback.print_exc()
+                return False
 
     def delete_network(self, net_id):
         try:
@@ -92,6 +99,7 @@ class neutronclient(object):
 
     def create_subnet(self, net_id, net_tenant, net_name, sub_cidr,
                     sub_dhcp_start, sub_dhcp_end, sub_gw):
+        self.get_client(net_tenant)
         net_name = "%s%s%s%s" % (
             self.net_prefix, net_tenant, self.net_suffix, net_name
         )
@@ -115,7 +123,7 @@ class neutronclient(object):
         try:
             resp = self.client.create_subnet(body=body)
             sub_id = resp['subnet'].get('id')
-            print("[%s] create, sub: %s" % (self.log.get_currenttime(), sub_id))
+            print("[%s] create, sub: %s, name: %s" % (self.log.get_currenttime(), sub_id, net_name))
             return sub_id
         except:
             print("[%s] REQ: %s" % (self.log.get_currenttime(), body))
