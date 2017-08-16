@@ -4,6 +4,10 @@ from fabric.api import task, run, sudo
 import fuc
 
 @task
+def python2():
+    fuc.apt('python')
+
+@task
 def gmond():
     fuc.install_pkgs('ganglia-gmond')
     fuc.set_service('gmond')
@@ -30,21 +34,6 @@ def zabbix_agent():
     sudo('perl -pi -e "s/ServerActive=127.0.0.1/ServerActive=192.168.1.24/" /etc/zabbix/zabbix_agentd.conf')
     fuc.set_service('zabbix-agent')
     sudo('tail -n 10 /var/log/zabbix/zabbix_agentd.log')
-
-@task
-def vertx():
-    RET = False
-    fuc.pushfile('vert.x-2.1.2.tar.gz', '/home/sysop/work/vertx/', '/tmp/vertx/')
-    sudo('mkdir -p /usr/neodc/sw/ && tar xzf /tmp/vertx/vert.x-2.1.2.tar.gz -C /usr/neodc/sw/')
-    sudo('ln -sf /usr/neodc/sw/vert.x-2.1.2 /usr/neodc/sw/vertx')
-    file = sudo('cat /etc/profile', quiet = True)
-    for i in file.split('\n'):
-    if 'VERTX_HOME' in i: RET = True
-    if RET == False:
-    sudo('echo "export VERTX_HOME=/usr/neodc/sw/vertx" >> /etc/profile')
-    sudo('echo "export PATH=$PATH:$VERTX_HOME/bin:$ANT_HOME/bin" >> /etc/profile')
-    sudo('source /etc/profile')
-    run('vertx version')
 
 @task
 def java():

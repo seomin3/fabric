@@ -3,6 +3,19 @@ from fabric.api import task, run, put, sudo, env
 import fuc
 
 @task
+def root_keypair():
+    fuc.keypair(user='root')
+
+@task
+def sysop_keypair():
+    fuc.keypair(user='sysop')
+
+@task
+def sudoer():
+    username = env.user
+    sudo('echo "%s   ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/%s' % (username, username))
+
+@task
 def gmond():
     fuc.pushfile('gmond.conf', './doc/etc/ganglia/')
     sudo('cp /tmp/fab/gmond.conf /etc/ganglia/')
@@ -37,7 +50,7 @@ def enable_rootlogin():
 
 @task
 def resetpw():
-    USER_NAME = 'user'
+    USER_NAME = 'root'
     USER_PASS = 'pass!!'
     sudo('echo "%s:%s" | chpasswd' % (USER_NAME,USER_PASS))
 

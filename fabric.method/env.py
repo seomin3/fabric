@@ -13,7 +13,7 @@ env.hosts = ['']
 
 # Set fabric env
 env.user = 'sysop'
-env.password = 'pass!'
+env.password = env.sudo_password = 'root///'
 env.timeout = 30
 env.command_timeout = 1200
 env.warn_only = False
@@ -35,6 +35,7 @@ if hosttype == 'file':
     # remove fault server
     for i in env.hosts:
         try:
+            print(i)
             response = os.system("ping -c1 -w1 %s > /dev/null" % i)
             if response != 0:
                 print "remove - %s" % i

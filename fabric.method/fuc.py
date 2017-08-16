@@ -1,9 +1,26 @@
 from fabric.api import run, put, sudo
 from fabric.contrib.files import exists
 
+def keypair(user='root'):
+    pushfile('id_rsa', './doc/')
+    pushfile('id_rsa.pub', './doc/')
+    if user == 'root':
+        user_home = '/root'
+    else:
+        user_home = '/home/%s' % user
+    sudo('mkdir %s/.ssh/' % user_home)
+    sudo('cp /tmp/fab/id_rsa.pub %s/.ssh/authorized_keys' % user_home)
+    sudo('cp /tmp/fab/id_rsa.pub %s/.ssh/id_rsa.pub' % user_home)
+    sudo('cp /tmp/fab/id_rsa %s/.ssh/id_rsa' % user_home)
+    sudo('chmod 600 %s/.ssh/id_rsa' % user_home)
+    
 def pushfile(pushfile, filepath='./doc/', tempdir='/tmp/fab/'):
     run('mkdir -p %s' % tempdir)
     put('%s%s' % (filepath, pushfile), '%s' % tempdir)
+
+def apt(pkg=None):
+    if pkg:
+        sudo('apt -qq install -y %s' % pkg)
 
 def install_pkgs(rpm=''):
     clean_yum()
